@@ -1,0 +1,126 @@
+<!-- fragment_screen_slide_page.xml -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraint"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.videoapp.player.VideoPlayerIJK
+        android:id="@+id/ijkPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+    </com.example.videoapp.player.VideoPlayerIJK>
+
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/ijkPlayer"
+        />
+
+    <ImageButton
+        android:id="@+id/buttonPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@mipmap/start3"
+        app:layout_constraintBottom_toTopOf="@id/seekBar"
+        app:layout_constraintStart_toStartOf="@id/constraint"
+        app:layout_constraintEnd_toStartOf="@id/textView"
+        />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
+        android:background="#000000"
+        android:text="00:00/00:00"
+        android:textSize="18dp"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toEndOf="@id/buttonPlay"
+        app:layout_constraintBottom_toTopOf="@id/seekBar"
+
+        />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="description"
+        android:textSize="20sp"
+        android:background="#000000"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="@id/constraint"
+        app:layout_constraintBottom_toTopOf="@id/buttonPlay"
+         />
+
+    <TextView
+        android:id="@+id/nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="nickname"
+        android:textSize="20sp"
+        android:background="#000000"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="@id/constraint"
+        app:layout_constraintBottom_toTopOf="@id/description"/>
+
+    <ImageButton
+        android:id="@+id/avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/avatar"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintEnd_toEndOf="@id/constraint"
+        app:layout_constraintBottom_toTopOf="@id/like"/>
+
+    <ImageButton
+        android:id="@+id/like"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@mipmap/like"
+        app:layout_constraintEnd_toEndOf="@id/constraint"
+        app:layout_constraintBottom_toTopOf="@id/likeCount"/>
+
+    <TextView
+        android:id="@+id/likeCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:text="TextView"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        android:textColor="#FF6A6A"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/constraint"
+        app:layout_constraintBottom_toTopOf="@id/seekBar"
+         />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+    
