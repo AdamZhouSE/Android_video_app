@@ -1,5 +1,6 @@
 package com.example.videoapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -9,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.videoapp.MyAdapter;
 import com.example.videoapp.data.ApiService;
@@ -31,6 +33,7 @@ public class RecycleViewActivity extends AppCompatActivity implements MyAdapter.
 
     private MyAdapter mAdapter;
     private RecyclerView mNumbersListView;
+    private List<VideoResponse.Video> videos;
 
     private Toast mToast;
 
@@ -41,9 +44,10 @@ public class RecycleViewActivity extends AppCompatActivity implements MyAdapter.
         setContentView(R.layout.activity_recycleview);
         mNumbersListView = findViewById(R.id.video_lists);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mNumbersListView.setLayoutManager(layoutManager);
+        StaggeredGridLayoutManager staggeredGridLayoutManager =
+                new StaggeredGridLayoutManager(2,
+                        StaggeredGridLayoutManager.VERTICAL);
+        mNumbersListView.setLayoutManager(staggeredGridLayoutManager);
         /*
          * Use this setting to improve performance if you know that changes in content do not
          * change the child layout size in the RecyclerView
@@ -96,8 +100,10 @@ public class RecycleViewActivity extends AppCompatActivity implements MyAdapter.
         }
         String toastMessage = "Item #" + clickedItemIndex + " clicked.";
         mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
-
         mToast.show();
+        Intent intent=new Intent(RecycleViewActivity.this,ScreenSlidePagerActivity.class);
+        intent.putExtra("position",clickedItemIndex);
+        startActivity(intent);
     }
 
     private void getData() {
@@ -126,4 +132,6 @@ public class RecycleViewActivity extends AppCompatActivity implements MyAdapter.
             }
         });
     }
+
+
 }

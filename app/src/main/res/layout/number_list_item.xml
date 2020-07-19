@@ -1,18 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp" >
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="3dp">
 
-    <TextView
-        android:id="@+id/item_number"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/item_cover"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="42sp"
-        android:fontFamily="monospace"
-        android:text="#42"/>
+        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom">
+        <ImageView
+            android:id="@+id/like"
+            android:baselineAlignBottom="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@mipmap/like"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+        <TextView
+            android:id="@+id/like_count"
+            app:layout_constraintLeft_toRightOf="@+id/like"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1000"
+            android:textColor="@color/white"
 
-
+        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </FrameLayout>
