@@ -22,6 +22,7 @@ import com.example.videoapp.data.VideoResponse;
 import com.example.videoapp.player.VideoPlayerIJK;
 import com.example.videoapp.player.VideoPlayerListener;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
@@ -123,7 +124,18 @@ public class ScreenSlidePageFragment extends Fragment {
 
 
         likeCount = view.findViewById(R.id.likeCount);
-        likeCount.setText(String.valueOf(video.likeCount));
+        if(video.likeCount<10000) {//点赞数低于10000
+            likeCount.setText(String.valueOf(video.likeCount));
+        }else{
+            //以万为单位
+            if(video.likeCount%10000==0){//整除一万
+                likeCount.setText(video.likeCount/10000+"w");
+            }else{//保留一位小数
+                float num =(float)video.likeCount/10000;
+                DecimalFormat df = new DecimalFormat("0.0");
+                likeCount.setText(df.format(num)+"w");
+            }
+        }
 
         // 播放按钮图片随点击改变
         buttonPlay = view.findViewById(R.id.buttonPlay);

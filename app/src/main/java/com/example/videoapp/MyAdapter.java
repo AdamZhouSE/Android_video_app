@@ -92,10 +92,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             if(video.likeCount<10000) {//点赞数低于10000
                 like_count.setText(String.valueOf(video.likeCount));
             }else{
-                //以万为单位，并保留一位小数
-                float num =(float)video.likeCount/10000;
-                DecimalFormat df = new DecimalFormat("0.0");
-                like_count.setText(df.format(num)+"w");
+                //以万为单位
+                if(video.likeCount%10000==0){//整除一万
+                    like_count.setText(video.likeCount/10000+"w");
+                }else{//保留一位小数
+                    float num =(float)video.likeCount/10000;
+                    DecimalFormat df = new DecimalFormat("0.0");
+                    like_count.setText(df.format(num)+"w");
+                }
             }
 
             //获取视频第一帧作为封面

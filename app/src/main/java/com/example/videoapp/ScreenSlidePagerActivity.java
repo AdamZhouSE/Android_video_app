@@ -4,6 +4,7 @@ package com.example.videoapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -58,20 +59,30 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         viewPager2.setAdapter(pagerAdapter);
         viewPager2.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
 
-
-        int position=getIntent().getIntExtra("position",-1);
         //如果是从recycler界面跳转过来，判断当前选中视频的position
+        int position=getIntent().getIntExtra("position",-1);
+        Handler handler=new Handler();
         if(position!=-1){
-            viewPager2.setCurrentItem(position);
+            ChangeFragmentThread thread=new ChangeFragmentThread(position);
+            handler.postDelayed(thread,1000);
+            //如果不用线程，直接setCurrentItem会不起作用，网上说是因为未加载完全
         }
         Log.d("position",String.valueOf(position));
 
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private class ChangeFragmentThread extends Thread {
+        private int position;
+
+        public ChangeFragmentThread(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void run() {
+            viewPager2.setCurrentItem(position);
+        }
     }
 
     @Override
@@ -104,6 +115,7 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         public int getItemCount() {
             return NUM_PAGES;
         }
+
     }
 
     /**

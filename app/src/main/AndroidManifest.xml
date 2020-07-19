@@ -21,7 +21,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ScreenSlidePagerActivity"/>
-        <activity android:name=".RecycleViewActivity"/>
+        <activity android:name=".RecycleViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>
