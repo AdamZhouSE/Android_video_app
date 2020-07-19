@@ -4,6 +4,16 @@ android {
     compileSdkVersion 29
     buildToolsVersion '30.0.0'
 
+    //解决报couldn't find "libijkffmpeg.so"错的问题
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'armeabi-v7a', 'armeabi'
+            universalApk false
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.videoapp"
         minSdkVersion 16

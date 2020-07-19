@@ -1,7 +1,9 @@
 package com.example.videoapp;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -12,6 +14,7 @@ import com.example.videoapp.data.ApiService;
 import com.example.videoapp.data.VideoResponse;
 import com.example.videoapp.player.VideoPlayerIJK;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,12 +51,27 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_slide);
 
+        getData();
+
         viewPager2 = findViewById(R.id.pager);
         pagerAdapter = new ScreenSlidePagerAdapter(this);
         viewPager2.setAdapter(pagerAdapter);
         viewPager2.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
 
-        getData();
+
+        int position=getIntent().getIntExtra("position",-1);
+        //如果是从recycler界面跳转过来，判断当前选中视频的position
+        if(position!=-1){
+            viewPager2.setCurrentItem(position);
+        }
+        Log.d("position",String.valueOf(position));
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -67,6 +85,7 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
             viewPager2.setCurrentItem(viewPager2.getCurrentItem() - 1);
         }
     }
+
 
     public class ScreenSlidePagerAdapter extends FragmentStateAdapter {
 
