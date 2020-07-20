@@ -1,26 +1,35 @@
 package com.example.videoapp;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.videoapp.data.VideoResponse;
 import com.example.videoapp.player.VideoPlayerIJK;
 import com.example.videoapp.player.VideoPlayerListener;
+import com.example.videoapp.utils.MyClickListener;
+import com.example.videoapp.widget.LoveView;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -28,6 +37,12 @@ import java.text.SimpleDateFormat;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
+ * 使用ViewPager2 + Fragment实现类似抖音的效果
+ * 1. 向下滑动浏览不同的视频
+ * 2. 单击屏幕播放和暂停
+ * 3. 双击出现爱心
+ *
+ *
  * Fragment页面
  * 重要: ViewPager2 Fragment的生命周期
  * 在进入下一个界面后，前一个界面会运行onPause() 所以需要在onPause下判断如果视频仍在播放，需要停止
@@ -40,24 +55,22 @@ public class ScreenSlidePageFragment extends Fragment {
     private static final String TAG = "FragmentLifeCycle";
 
     private VideoPlayerIJK videoPlayerIJK;
-
     private VideoResponse.Video video;
-
     private SeekBar seekBar;
-
     private TextView textView;
-
-    private ImageButton buttonPlay;
-
     private TextView nickname;
-
     private TextView description;
-
     private TextView likeCount;
-
     private ImageButton avatar;
-
     private ImageButton like;
+    private Button buttonPlay;
+    private ImageView imagePause;
+    private AnimatorSet animatorSet;
+    private AnimatorSet animatorSet1;
+    private ImageView background;
+    private LottieAnimationView animationView;
+    private Handler handler1;
+    private LoveView loveView;
 
     // 开启一个新线程，每500ms判定一次，使得进度条位置随视频播放变化
     private Handler handler = new Handler();
@@ -68,6 +81,7 @@ public class ScreenSlidePageFragment extends Fragment {
                 double curPos = (double) videoPlayerIJK.getCurrentPosition();
                 double total = (double) videoPlayerIJK.getDuration();
                 int currentPos = (int) (curPos / total * 100);
+                Log.d("zzy", "curr " + currentPos + " total " + total);
                 seekBar.setProgress(currentPos);
 
                 SimpleDateFormat sf = new SimpleDateFormat("mm:ss");
@@ -86,6 +100,7 @@ public class ScreenSlidePageFragment extends Fragment {
         this.video = video;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -107,12 +122,24 @@ public class ScreenSlidePageFragment extends Fragment {
         runnable.run();
 
         nickname = view.findViewById(R.id.nickname);
-        nickname.setText(video.nickname);
+        String name = "@" + video.nickname;
+        nickname.setText(name);
         description = view.findViewById(R.id.description);
         description.setText(video.description);
-        avatar = view.findViewById(R.id.avatar);
 
-        // 使用Glide加载头像
+        avatar = view.findViewById(R.id.avatar);
+        background = view.findViewById(R.id.glide_background);
+
+        like = view.findViewById(R.id.like);
+        // 初始化未点赞状态 标签为unlike
+        like.setTag("unlike");
+
+        animationView = view.findViewById(R.id.animation_view);
+
+        loveView = view.findViewById(R.id.love_view);
+        loveView.setVisibility(View.GONE);
+
+        // 使用Glide加载用户头像
         String picUrl = video.avatar.replaceFirst("http", "https");
         RequestOptions cropOptions = new RequestOptions();
         cropOptions = cropOptions.circleCrop();
@@ -121,7 +148,13 @@ public class ScreenSlidePageFragment extends Fragment {
                 .apply(cropOptions)
                 .error(R.mipmap.avatar)
                 .into(avatar);
+        resetAvatarAnimation();
 
+        // 使用Glide加载视频封面
+//        if (! videoPlayerIJK.isPlaying()) {
+//            String videoUrl = video.url.replaceFirst("http", "https");
+//            loadImage(view, videoUrl);
+//        }
 
         likeCount = view.findViewById(R.id.likeCount);
         if(video.likeCount<10000) {//点赞数低于10000
@@ -137,44 +170,155 @@ public class ScreenSlidePageFragment extends Fragment {
             }
         }
 
-        // 播放按钮图片随点击改变
-        buttonPlay = view.findViewById(R.id.buttonPlay);
-        buttonPlay.setOnClickListener(new View.OnClickListener() {
+        // 单击播放/暂停 双击点赞
+        buttonPlay = view.findViewById(R.id.button3);
+        imagePause = view.findViewById(R.id.imagePause);
+        buttonPlay.setOnTouchListener(new MyClickListener(new MyClickListener.MyClickCallBack() {
             @Override
-            public void onClick(View v) {
+            public void oneClick() {
                 if (videoPlayerIJK.isPlaying()) {
                     videoPlayerIJK.pause();
-                    buttonPlay.setBackgroundResource(R.mipmap.pause3);
+                    imagePause.setVisibility(View.VISIBLE);
+                    resetPauseImageAnimation();
                 }
                 else {
                     videoPlayerIJK.start();
-                    buttonPlay.setBackgroundResource(R.mipmap.start3);
+                    imagePause.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void doubleClick() {
+                like.setBackgroundResource(R.mipmap.like);
+                // 点赞后标签变为like
+                like.setTag("like");
+            }
+
+            @Override
+            public void setXY(float x, float y) {
+                Log.d("setXY", "" + x + " " + y);
+                loveView.setVisibility(View.VISIBLE);
+                loveView.setXY(x, y);
+                loveView.postInvalidate();
+                resetLoveAnimation();
+            }
+        }));
+
+        like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (like.getTag().toString().equals("unlike")) {
+                    like.setBackgroundResource(R.mipmap.like);
+                    like.setTag("like");
+                }
+                else {
+                    like.setBackgroundResource(R.mipmap.beforelike);
+                    like.setTag("unlike");
                 }
             }
         });
 
-
         seekBar = view.findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-            }
-
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
             // 进度条在停止移动后视频到达指定时间
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int progress = seekBar.getProgress();
                 long time = progress * videoPlayerIJK.getDuration() / 100;
+                Log.d("zzy: seekBar", "" + videoPlayerIJK.getCurrentPosition());
                 videoPlayerIJK.seekTo(time);
             }
         });
         Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], " + "container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
         return view;
+    }
+
+    /**
+     * 使用animation动画实现暂停图标淡入效果
+     */
+    private void resetPauseImageAnimation() {
+        if (animatorSet != null) {
+            animatorSet.cancel();
+        }
+
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(imagePause,
+                "scaleX", 2.5f, 1.5f);
+        //scaleXAnimator.setDuration(1000);
+        scaleXAnimator.setRepeatCount(0);
+        scaleXAnimator.setInterpolator(new LinearInterpolator());
+
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(imagePause,
+                "scaleY", 2.5f, 1.5f);
+        //scaleXAnimator.setDuration(1000);
+        scaleYAnimator.setRepeatCount(0);
+        scaleYAnimator.setInterpolator(new LinearInterpolator());
+
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(imagePause,
+                "alpha", 0.0f, 0.8f);
+        //alpha.setDuration(1000);
+        alpha.setRepeatCount(0);
+        scaleYAnimator.setInterpolator(new LinearInterpolator());
+
+        animatorSet = new AnimatorSet();
+        animatorSet.playTogether(scaleXAnimator, scaleYAnimator, alpha);
+        animatorSet.start();
+
+    }
+
+    /**
+     * 实现头像旋转动画效果
+     */
+
+    private void resetAvatarAnimation() {
+
+        ObjectAnimator animator = ObjectAnimator.ofFloat(avatar,
+                "rotation", 0, 360);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setDuration(8000);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.start();
+    }
+
+    /**
+     * 实现双击出现爱心图标后的淡出效果
+     */
+
+    private void resetLoveAnimation() {
+        if (animatorSet1 != null) {
+            animatorSet1.cancel();
+        }
+
+        ObjectAnimator animatorLoveIn = ObjectAnimator.ofFloat(loveView,
+                "alpha", 0.0f, 1.0f);
+        animatorLoveIn.setDuration(1000);
+        animatorLoveIn.setRepeatCount(0);
+        animatorLoveIn.start();
+
+        ObjectAnimator animatorLoveOut = ObjectAnimator.ofFloat(loveView,
+                "alpha", 1.0f, 0.0f);
+        animatorLoveOut.setDuration(1000);
+        animatorLoveOut.setRepeatCount(0);
+        animatorLoveOut.start();
+    }
+
+    /**
+     * 使用Glide加载视频封面图
+     *
+     */
+    private void loadImage(View view, String url) {
+        Glide.with(view)
+                .setDefaultRequestOptions(
+                        new RequestOptions()
+                        .frame(1000)
+                        .error(R.color.black)
+                )
+                .load(url)
+                .into(background);
     }
 
 
@@ -193,6 +337,22 @@ public class ScreenSlidePageFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+//        getView().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                ObjectAnimator animator = ObjectAnimator.ofFloat(animationView,
+//                        "alpha", 1.0f, 0.0f);
+//                animator.setDuration(1000);
+//                animator.setRepeatCount(0);
+//                animator.start();
+//
+//                ObjectAnimator animator1 = ObjectAnimator.ofFloat(videoPlayerIJK,
+//                        "alpha", 0.0f, 1.0f);
+//                animator1.setDuration(1000);
+//                animator1.setRepeatCount(0);
+//                animator1.start();
+//            }
+//        }, 2000);
         Log.d(TAG, "onActivityCreated() called with: savedInstanceState = [" + savedInstanceState + "]");
     }
 
@@ -222,7 +382,7 @@ public class ScreenSlidePageFragment extends Fragment {
     public void onStop() {
         super.onStop();
         if (videoPlayerIJK.isPlaying()) {
-            videoPlayerIJK.pause();
+            videoPlayerIJK.stop();
         }
         IjkMediaPlayer.native_profileEnd();
         Log.d(TAG, "onStop() called");

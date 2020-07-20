@@ -14,10 +14,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.videoapp.data.ApiService;
 import com.example.videoapp.data.VideoResponse;
 import com.example.videoapp.player.VideoPlayerIJK;
-
-import java.text.SimpleDateFormat;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,7 +22,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * 使用ViewPager2实现类似抖音的效果
+ *
+ *
  */
 
 public class ScreenSlidePagerActivity extends FragmentActivity {

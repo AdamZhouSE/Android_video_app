@@ -15,11 +15,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.example.videoapp.MyAdapter;
 import com.example.videoapp.data.ApiService;
 import com.example.videoapp.data.VideoResponse;
-import com.google.gson.Gson;
-
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

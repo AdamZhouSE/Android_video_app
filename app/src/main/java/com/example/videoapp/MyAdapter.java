@@ -104,8 +104,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
             //获取视频第一帧作为封面
             String picUrl = video.url.replaceFirst("http", "https");
-            RequestOptions cropOptions = new RequestOptions();
-            cropOptions = cropOptions.circleCrop();
             loadCover(picUrl);
 
         }
