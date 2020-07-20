@@ -62,6 +62,7 @@
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/CustomSeekBarStyle"
         app:layout_constraintBottom_toBottomOf="@id/ijkPlayer" />
 
 

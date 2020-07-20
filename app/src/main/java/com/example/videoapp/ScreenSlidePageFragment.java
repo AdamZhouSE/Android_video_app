@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -69,8 +70,8 @@ public class ScreenSlidePageFragment extends Fragment {
     private AnimatorSet animatorSet1;
     private ImageView background;
     private LottieAnimationView animationView;
-    private Handler handler1;
     private LoveView loveView;
+    private ImageButton share;
 
     // 开启一个新线程，每500ms判定一次，使得进度条位置随视频播放变化
     private Handler handler = new Handler();
@@ -138,7 +139,6 @@ public class ScreenSlidePageFragment extends Fragment {
 
         loveView = view.findViewById(R.id.love_view);
         loveView.setVisibility(View.GONE);
-
         // 使用Glide加载用户头像
         String picUrl = video.avatar.replaceFirst("http", "https");
         RequestOptions cropOptions = new RequestOptions();
@@ -233,6 +233,19 @@ public class ScreenSlidePageFragment extends Fragment {
                 videoPlayerIJK.seekTo(time);
             }
         });
+
+        share = view.findViewById(R.id.share);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("*/*");
+                intent.putExtra(Intent.EXTRA_STREAM, video.url);
+                intent = Intent.createChooser(intent, "分享到");
+                startActivity(intent);
+            }
+        });
+
         Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], " + "container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
         return view;
     }
@@ -293,15 +306,9 @@ public class ScreenSlidePageFragment extends Fragment {
             animatorSet1.cancel();
         }
 
-        ObjectAnimator animatorLoveIn = ObjectAnimator.ofFloat(loveView,
-                "alpha", 0.0f, 1.0f);
-        animatorLoveIn.setDuration(1000);
-        animatorLoveIn.setRepeatCount(0);
-        animatorLoveIn.start();
-
         ObjectAnimator animatorLoveOut = ObjectAnimator.ofFloat(loveView,
                 "alpha", 1.0f, 0.0f);
-        animatorLoveOut.setDuration(1000);
+        animatorLoveOut.setDuration(1200);
         animatorLoveOut.setRepeatCount(0);
         animatorLoveOut.start();
     }
