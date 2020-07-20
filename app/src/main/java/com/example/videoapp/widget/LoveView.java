@@ -33,8 +33,8 @@ public class LoveView extends View {
     private  float posY = 100f;
 
     // 偏离值(图片距离点击位置有偏离，原因不明)
-    private float offSetX = 100.0f;
-    private float offSetY = 120.0f;
+    private float offSetX = 140.0f;
+    private float offSetY = 200.0f;
 
     private Bitmap bitmap;
 

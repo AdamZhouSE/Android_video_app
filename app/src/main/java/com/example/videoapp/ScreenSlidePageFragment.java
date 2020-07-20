@@ -118,7 +118,6 @@ public class ScreenSlidePageFragment extends Fragment {
         }
         videoPlayerIJK.setListener(new VideoPlayerListener());
         videoPlayerIJK.setVideoPath(video.url);
-
         // 开启线程
         runnable.run();
 
@@ -149,12 +148,6 @@ public class ScreenSlidePageFragment extends Fragment {
                 .error(R.mipmap.avatar)
                 .into(avatar);
         resetAvatarAnimation();
-
-        // 使用Glide加载视频封面
-//        if (! videoPlayerIJK.isPlaying()) {
-//            String videoUrl = video.url.replaceFirst("http", "https");
-//            loadImage(view, videoUrl);
-//        }
 
         likeCount = view.findViewById(R.id.likeCount);
         if(video.likeCount<10000) {//点赞数低于10000
@@ -347,17 +340,14 @@ public class ScreenSlidePageFragment extends Fragment {
 //        getView().postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
-//                ObjectAnimator animator = ObjectAnimator.ofFloat(animationView,
+//                ObjectAnimator animator = ObjectAnimator.ofFloat(background,
 //                        "alpha", 1.0f, 0.0f);
 //                animator.setDuration(1000);
 //                animator.setRepeatCount(0);
 //                animator.start();
 //
-//                ObjectAnimator animator1 = ObjectAnimator.ofFloat(videoPlayerIJK,
-//                        "alpha", 0.0f, 1.0f);
-//                animator1.setDuration(1000);
-//                animator1.setRepeatCount(0);
-//                animator1.start();
+//                videoPlayerIJK.setVisibility(View.VISIBLE);
+//
 //            }
 //        }, 2000);
         Log.d(TAG, "onActivityCreated() called with: savedInstanceState = [" + savedInstanceState + "]");

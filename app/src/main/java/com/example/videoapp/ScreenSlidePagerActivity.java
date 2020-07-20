@@ -14,6 +14,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.videoapp.data.ApiService;
 import com.example.videoapp.data.VideoResponse;
 import com.example.videoapp.player.VideoPlayerIJK;
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +58,8 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         pagerAdapter = new ScreenSlidePagerAdapter(this);
         viewPager2.setAdapter(pagerAdapter);
         viewPager2.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
+
+        //TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         //如果是从recycler界面跳转过来，判断当前选中视频的position
         int position=getIntent().getIntExtra("position",-1);
