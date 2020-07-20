@@ -48,7 +48,11 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  * 重要: ViewPager2 Fragment的生命周期
  * 在进入下一个界面后，前一个界面会运行onPause() 所以需要在onPause下判断如果视频仍在播放，需要停止
  * 在进入第四个Fragment时，第一个界面会运行onStop() onDestroy()，原因是:
- * 在RecycleView中可以发现mViewCacheMax默认是2，也就是说最大缓存数量是2
+ * 在RecycleView中可以发现mViewCacheMax默认是2，也就是说最大缓存数量是2 可以自定义
+ *
+ * TODO: 快速切换fragment报错 The application may be doing too much work on its main thread. 如何解决？
+ * TODO: 能否根据视频加载情况对于出现加载动画
+ *
  */
 
 public class ScreenSlidePageFragment extends Fragment {
@@ -69,7 +73,7 @@ public class ScreenSlidePageFragment extends Fragment {
     private AnimatorSet animatorSet;
     private AnimatorSet animatorSet1;
     private ImageView background;
-    private LottieAnimationView animationView;
+    private LottieAnimationView animationLoad;
     private LoveView loveView;
     private ImageButton share;
 
@@ -79,6 +83,7 @@ public class ScreenSlidePageFragment extends Fragment {
         @Override
         public void run() {
             if (videoPlayerIJK.isPlaying()) {
+
                 double curPos = (double) videoPlayerIJK.getCurrentPosition();
                 double total = (double) videoPlayerIJK.getDuration();
                 int currentPos = (int) (curPos / total * 100);
@@ -118,6 +123,7 @@ public class ScreenSlidePageFragment extends Fragment {
         }
         videoPlayerIJK.setListener(new VideoPlayerListener());
         videoPlayerIJK.setVideoPath(video.url);
+        videoPlayerIJK.setVisibility(View.GONE);
         // 开启线程
         runnable.run();
 
@@ -134,7 +140,7 @@ public class ScreenSlidePageFragment extends Fragment {
         // 初始化未点赞状态 标签为unlike
         like.setTag("unlike");
 
-        animationView = view.findViewById(R.id.animation_view);
+        animationLoad = view.findViewById(R.id.animation_load);
 
         loveView = view.findViewById(R.id.love_view);
         loveView.setVisibility(View.GONE);
@@ -337,19 +343,18 @@ public class ScreenSlidePageFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        getView().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                ObjectAnimator animator = ObjectAnimator.ofFloat(background,
-//                        "alpha", 1.0f, 0.0f);
-//                animator.setDuration(1000);
-//                animator.setRepeatCount(0);
-//                animator.start();
-//
-//                videoPlayerIJK.setVisibility(View.VISIBLE);
-//
-//            }
-//        }, 2000);
+        getView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ObjectAnimator animator = ObjectAnimator.ofFloat(animationLoad,
+                        "alpha", 1.0f, 0.0f);
+                animator.setDuration(1000);
+                animator.setRepeatCount(0);
+                animator.start();
+
+                videoPlayerIJK.setVisibility(View.VISIBLE);
+            }
+        }, 1000);
         Log.d(TAG, "onActivityCreated() called with: savedInstanceState = [" + savedInstanceState + "]");
     }
 
