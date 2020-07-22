@@ -1,9 +1,6 @@
 package com.example.videoapp;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
-import android.nfc.Tag;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +16,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.videoapp.data.VideoResponse;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {

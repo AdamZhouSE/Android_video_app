@@ -158,12 +158,6 @@ public class RecycleViewActivity extends AppCompatActivity implements MyAdapter.
     @Override
     public void onListItemClick(int clickedItemIndex) {
         Log.d(TAG, "onListItemClick: ");
-        if (mToast != null) {
-            mToast.cancel();
-        }
-        String toastMessage = "Item #" + clickedItemIndex + " clicked.";
-        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
-        mToast.show();
         Intent intent=new Intent(RecycleViewActivity.this,ScreenSlidePagerActivity.class);
         intent.putExtra("position",clickedItemIndex);
         startActivity(intent);

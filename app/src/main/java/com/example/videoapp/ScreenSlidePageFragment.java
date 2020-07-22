@@ -16,8 +16,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
@@ -124,6 +122,7 @@ public class ScreenSlidePageFragment extends Fragment {
         videoPlayerIJK.setListener(new VideoPlayerListener());
         videoPlayerIJK.setVideoPath(video.url);
         videoPlayerIJK.setVisibility(View.GONE);
+
         // 开启线程
         runnable.run();
 
@@ -169,9 +168,11 @@ public class ScreenSlidePageFragment extends Fragment {
             }
         }
 
+        // 视频暂停时显示暂停图标
+        imagePause = view.findViewById(R.id.imagePause);
+
         // 单击播放/暂停 双击点赞
         buttonPlay = view.findViewById(R.id.button3);
-        imagePause = view.findViewById(R.id.imagePause);
         buttonPlay.setOnTouchListener(new MyClickListener(new MyClickListener.MyClickCallBack() {
             @Override
             public void oneClick() {
@@ -301,9 +302,6 @@ public class ScreenSlidePageFragment extends Fragment {
      */
 
     private void resetLoveAnimation() {
-        if (animatorSet1 != null) {
-            animatorSet1.cancel();
-        }
 
         ObjectAnimator animatorLoveOut = ObjectAnimator.ofFloat(loveView,
                 "alpha", 1.0f, 0.0f);
@@ -364,12 +362,22 @@ public class ScreenSlidePageFragment extends Fragment {
         Log.d(TAG, "onStart() called");
     }
 
+    /**
+     * 切换Fragment时调用，使得当前Fragment视频开始播放
+     */
     @Override
     public void onResume() {
         super.onResume();
+        imagePause.setVisibility(View.GONE);
+        if (!videoPlayerIJK.isPlaying()) {
+            videoPlayerIJK.start();
+        }
         Log.d(TAG, "onResume() called");
     }
 
+    /**
+     * 切换Fragment时调用，使得前一个Fragment播放的视频暂停
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -385,6 +393,7 @@ public class ScreenSlidePageFragment extends Fragment {
         super.onStop();
         if (videoPlayerIJK.isPlaying()) {
             videoPlayerIJK.stop();
+            videoPlayerIJK.release();
         }
         IjkMediaPlayer.native_profileEnd();
         Log.d(TAG, "onStop() called");

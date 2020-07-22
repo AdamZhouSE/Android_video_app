@@ -47,6 +47,8 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
 
     private List<VideoResponse.Video> videos;
 
+    private int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +64,9 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         //TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         //如果是从recycler界面跳转过来，判断当前选中视频的position
-        int position=getIntent().getIntExtra("position",-1);
-        Handler handler=new Handler();
-        if(position!=-1){
+        position = getIntent().getIntExtra("position",-1);
+        Handler handler = new Handler();
+        if(position != -1) {
             ChangeFragmentThread thread=new ChangeFragmentThread(position);
             handler.postDelayed(thread,1000);
             //如果不用线程，直接setCurrentItem会不起作用，网上说是因为未加载完全
@@ -83,15 +85,14 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
 
         @Override
         public void run() {
-            viewPager2.setCurrentItem(position);
+            viewPager2.setCurrentItem(position, false);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (viewPager2.getCurrentItem() == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
+        // 如果是第一个视频或者从视频列表跳转过来，那么直接返回视频列表界面
+        if (viewPager2.getCurrentItem() == 0 || position != -1) {
             super.onBackPressed();
         } else {
             // Otherwise, select the previous step.
@@ -109,6 +110,7 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         @Override
         public Fragment createFragment(int position) {
             // 与Fragment通信，传入对应页面的视频信息
+            Log.d("Fragment", "" + position);
             VideoResponse.Video video = videos.get(position);
             return new ScreenSlidePageFragment(video);
         }
@@ -117,7 +119,6 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         public int getItemCount() {
             return NUM_PAGES;
         }
-
     }
 
     /**

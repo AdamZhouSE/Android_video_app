@@ -151,6 +151,9 @@ public class VideoPlayerIJK extends FrameLayout {
         //开启硬解码
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
 
+        // 开启视频循环播放
+        ijkMediaPlayer.setLooping(true);
+
         mMediaPlayer = ijkMediaPlayer;
         ((IjkMediaPlayer) mMediaPlayer).setSpeed(3f);
         if (listener != null) {

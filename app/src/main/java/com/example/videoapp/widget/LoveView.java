@@ -7,8 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -18,10 +16,7 @@ import com.example.videoapp.R;
 
 /**
  * 绘制双击后出现的爱心
- * http://www.mathematische-basteleien.de/heart.htm#Drawn%20Hearts
  *
- * 太复杂了...
- * 目前用图片代替，但是点击后图片出现的位置有偏移
  */
 
 public class LoveView extends View {
@@ -57,20 +52,18 @@ public class LoveView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-//        int size;
-//        int width = getMeasuredWidth();
-//        int height = getMeasuredHeight();
-//        int widthWithoutPadding = width - getPaddingLeft() - getPaddingRight();
-//        int heightWithoutPadding = height - getPaddingTop() - getPaddingBottom();
-//
-//        if (widthWithoutPadding > heightWithoutPadding) {
-//            size = heightWithoutPadding;
-//        } else {
-//            size = widthWithoutPadding;
-//        }
-        // Log.d("zzy", "调用了onMeasure");
+        int size;
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+        int widthWithoutPadding = width - getPaddingLeft() - getPaddingRight();
+        int heightWithoutPadding = height - getPaddingTop() - getPaddingBottom();
 
-//        setMeasuredDimension(size + getPaddingLeft() + getPaddingRight(), size + getPaddingTop() + getPaddingBottom());
+        if (widthWithoutPadding > heightWithoutPadding) {
+            size = heightWithoutPadding;
+        } else {
+            size = widthWithoutPadding;
+        }
+        setMeasuredDimension(size + getPaddingLeft() + getPaddingRight(), size + getPaddingTop() + getPaddingBottom());
     }
 
     private void init(Context context, AttributeSet attrs) {
@@ -89,10 +82,7 @@ public class LoveView extends View {
     @Override
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
-//        canvas.drawCircle(posX, posY, radius, paint);
-//        canvas.drawCircle(posX + 2 * radius, posY, radius, paint);
-//        canvas.drawLine(posX + radius, posY, posX + radius, posY + 2 * radius, paint);
-
+        // 在点击位置绘制爱心图片
         canvas.drawBitmap(bitmap, posX - offSetX, posY - offSetY, paint);
     }
 
