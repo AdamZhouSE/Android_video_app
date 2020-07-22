@@ -77,12 +77,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         View itemView;
         TextView like_count;
         ImageView cover;
+        TextView nickname;
+        ImageView avatar;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             this.itemView=itemView;
+            nickname=itemView.findViewById(R.id.nickname);
             like_count=itemView.findViewById(R.id.like_count);
             cover=itemView.findViewById(R.id.item_cover);
+            avatar=itemView.findViewById(R.id.avatar);
             itemView.setOnClickListener(this);
         }
 
@@ -101,11 +105,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     like_count.setText(df.format(num)+"w");
                 }
             }
+            nickname.setText(video.nickname);
 
             //获取视频第一帧作为封面
             String picUrl = video.url.replaceFirst("http", "https");
             loadCover(picUrl);
 
+            picUrl = video.avatar.replaceFirst("http", "https");
+            loadAvatar(picUrl);
+
+        }
+
+        public void loadAvatar(String url){
+            RequestOptions cropOptions = new RequestOptions();
+            cropOptions = cropOptions.circleCrop();
+            Glide.with(itemView)
+                    .load(url)
+                    .apply(cropOptions)
+                    .error(R.mipmap.avatar)
+                    .into(avatar);
         }
 
         public void loadCover( String url) {
