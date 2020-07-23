@@ -4,9 +4,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
+import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -33,9 +35,9 @@ public class RecordVideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_record_video);
 
         videoView = findViewById(R.id.img);
+        videoView.setMediaController(new MediaController(this));
         findViewById(R.id.btn_picture).setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(RecordVideoActivity.this,
-                    Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (!checkPermissionAllGranted(mPermissionsArrays)) {
                 // 在这里申请相机、存储的权限
                 ActivityCompat.requestPermissions(RecordVideoActivity.this,mPermissionsArrays,REQUEST_PERMISSION);
             } else {
@@ -61,6 +63,20 @@ public class RecordVideoActivity extends AppCompatActivity {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+
+    private boolean checkPermissionAllGranted(String[] permissions) {
+        // 6.0以下不需要
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        for (String permission : permissions) {
+            if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                // 只要有一个权限没有被授予, 则直接返回 false
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {

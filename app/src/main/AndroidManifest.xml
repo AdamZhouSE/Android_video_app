@@ -27,7 +27,8 @@
         <activity android:name=".RecycleViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".RecordVideoActivity"/>
+        <activity android:name=".RecordVideoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>
