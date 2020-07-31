@@ -137,19 +137,6 @@ public class RecycleViewActivity extends AppCompatActivity implements MyAdapter.
 
     private final static int REQUEST_PERMISSION = 0x123;
 
-    private boolean checkPermissionAllGranted(String[] permissions) {
-        // 6.0以下不需要
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        for (String permission : permissions) {
-            if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                // 只要有一个权限没有被授予, 则直接返回 false
-                return false;
-            }
-        }
-        return true;
-    }
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
@@ -200,17 +187,6 @@ public class RecycleViewActivity extends AppCompatActivity implements MyAdapter.
         recordVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (!checkPermissionAllGranted(mPermissionsArrays)) {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                        requestPermissions(mPermissionsArrays, REQUEST_PERMISSION);
-//                    } else {
-//                        // TODO
-//                    }
-//                }
-//                if(checkPermissionAllGranted(mPermissionsArrays)){
-//                    Intent intent = new Intent(RecycleViewActivity.this, RecordingActivity.class);
-//                    startActivityForResult(intent, PLAY_CEDE);
-//                }
                 startActivity(new Intent(RecycleViewActivity.this, RecordVideoActivity.class));
 
             }
@@ -232,33 +208,6 @@ public class RecycleViewActivity extends AppCompatActivity implements MyAdapter.
             Toast.makeText(this,"录制成功",Toast.LENGTH_SHORT).show();
             Log.d("record","成功");
         }
-    }
-
-    /**
-     * 生成随机文件
-     *
-     * @return
-     */
-    private File createMFile() {
-
-        //设置文件存放目录
-
-        String fileDir = Environment.getExternalStorageDirectory() + "/videoRecorder";
-
-        File dir = new File(fileDir);
-
-        //判断文件夹是否存在 如不存在就创建
-
-        if (!dir.exists()) {
-
-            dir.mkdir();
-
-        }
-        String fileName = generateFileName();
-        File mFile = new File(dir, fileName);
-       // mCurrentScreenFileName = mFile.getAbsolutePath();
-        return mFile;
-
     }
 
 
