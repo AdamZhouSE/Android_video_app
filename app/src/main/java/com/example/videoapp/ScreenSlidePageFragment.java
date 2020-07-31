@@ -36,10 +36,6 @@ import java.text.SimpleDateFormat;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
- * 使用ViewPager2 + Fragment实现类似抖音的效果
- * 1. 向下滑动浏览不同的视频
- * 2. 单击屏幕播放和暂停
- * 3. 双击出现爱心
  *
  *
  * Fragment页面
@@ -74,6 +70,7 @@ public class ScreenSlidePageFragment extends Fragment {
     private LottieAnimationView animationLoad;
     private LoveView loveView;
     private ImageButton share;
+
 
     // 开启一个新线程，每500ms判定一次，使得进度条位置随视频播放变化
     private Handler handler = new Handler();
@@ -138,6 +135,7 @@ public class ScreenSlidePageFragment extends Fragment {
         like = view.findViewById(R.id.like);
         // 初始化未点赞状态 标签为unlike
         like.setTag("unlike");
+
 
         animationLoad = view.findViewById(R.id.animation_load);
 
@@ -310,20 +308,6 @@ public class ScreenSlidePageFragment extends Fragment {
         animatorLoveOut.start();
     }
 
-    /**
-     * 使用Glide加载视频封面图
-     *
-     */
-    private void loadImage(View view, String url) {
-        Glide.with(view)
-                .setDefaultRequestOptions(
-                        new RequestOptions()
-                        .frame(1000)
-                        .error(R.color.black)
-                )
-                .load(url)
-                .into(background);
-    }
 
 
     @Override

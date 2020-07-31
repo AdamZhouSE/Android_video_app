@@ -4,15 +4,12 @@ import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.videoapp.MyAdapter;
 import com.example.videoapp.data.ApiService;
 import com.example.videoapp.data.VideoResponse;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

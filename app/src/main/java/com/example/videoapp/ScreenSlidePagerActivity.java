@@ -1,10 +1,8 @@
 package com.example.videoapp;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -13,8 +11,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.videoapp.data.ApiService;
 import com.example.videoapp.data.VideoResponse;
-import com.example.videoapp.player.VideoPlayerIJK;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
 import retrofit2.Call;
@@ -24,8 +20,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- *
- *
+ * 使用ViewPager2 + Fragment实现类似抖音的效果
+ * 1. 向下滑动浏览不同的视频
+ * 2. 单击屏幕播放和暂停
+ * 3. 双击出现爱心
  */
 
 public class ScreenSlidePagerActivity extends FragmentActivity {
@@ -60,8 +58,6 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         pagerAdapter = new ScreenSlidePagerAdapter(this);
         viewPager2.setAdapter(pagerAdapter);
         viewPager2.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
-
-        //TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         //如果是从recycler界面跳转过来，判断当前选中视频的position
         position = getIntent().getIntExtra("position",-1);
@@ -148,4 +144,6 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
             }
         });
     }
+
+
 }
