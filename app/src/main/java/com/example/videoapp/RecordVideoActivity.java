@@ -7,20 +7,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.widget.Button;
 import android.widget.MediaController;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 public class RecordVideoActivity extends AppCompatActivity {
 
     private VideoView videoView;
-    private Button uploadBtn;
     private Uri videoUri;
     private static final int REQUEST_VIDEO_CAPTURE = 1;
 
@@ -46,14 +42,6 @@ public class RecordVideoActivity extends AppCompatActivity {
                 if(takeVideoIntent.resolveActivity(getPackageManager())!=null){
                     startActivityForResult(takeVideoIntent,REQUEST_VIDEO_CAPTURE);
                 }
-            }
-        });
-        uploadBtn=findViewById(R.id.btn_upload);
-        uploadBtn.setOnClickListener(v ->{
-            if(videoUri==null){
-                Toast.makeText(this,"没有视频可以上传！",Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(this,"此功能还未完成！",Toast.LENGTH_SHORT).show();
             }
         });
 
