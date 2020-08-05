@@ -44,8 +44,6 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  * 在进入第四个Fragment时，第一个界面会运行onStop() onDestroy()，原因是:
  * 在RecycleView中可以发现mViewCacheMax默认是2，也就是说最大缓存数量是2 可以自定义
  *
- * TODO: 快速切换fragment报错 The application may be doing too much work on its main thread. 如何解决？
- * TODO: 能否根据视频加载情况对于出现加载动画
  *
  */
 
